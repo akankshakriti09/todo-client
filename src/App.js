@@ -17,12 +17,13 @@ function App() {
   const [taskList, setTaskList] = useState([]);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [search, setSearch] = useState("");
 
   const getTodoList = () => {
     axios
       .request({
         method: "get",
-        url: "http://localhost:3600/task-list?search=",
+        url: `http://localhost:3600/task-list?search=${search}`,
       })
       .then((response) => {
         console.log(JSON.stringify(response.data));
@@ -37,6 +38,11 @@ function App() {
       getTodoList();
     }
   }, [showEdit, show]);
+
+  const searchSubmit = () => {
+    getTodoList();
+    setSearch("");
+  };
 
   const deleteTaskFunc = () => {
     axios
@@ -99,8 +105,15 @@ function App() {
                   placeholder="Search"
                   className="me-2"
                   aria-label="Search"
+                  onChange={(e) => setSearch(e.target.value)}
+                  value={search}
                 />
-                <Button variant="outline-success">Search</Button>
+                <Button
+                  variant="outline-success"
+                  onClick={() => searchSubmit()}
+                >
+                  Search
+                </Button>
               </Form>
             </Navbar.Collapse>
           </Container>
